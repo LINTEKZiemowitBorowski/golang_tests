@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"time"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
@@ -81,6 +82,9 @@ func insertIntoDatabase(databaseName string, values map[string]string) {
 }
 
 func main() {
+
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	fmt.Printf("Number of available CPUs: %d\n", runtime.NumCPU())
 
 	// Prepare test data
 	num_iter := 500
