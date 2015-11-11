@@ -1,7 +1,6 @@
 package main
 
 import (
-	"math"
 	"time"
 	"fmt"
 	"sync"
@@ -12,14 +11,14 @@ var wg sync.WaitGroup
 
 var th_counter int = 0
 
-func run() float64 {
-	var result float64 = 0
+func run() float32 {
+	var result float32 = 0
 	defer wg.Done()
 
 	for x := 0; x < 1000000; x++ {
-		var f float64 = float64(x)
-		var p float64 = f * math.Pi
-		result += math.Sqrt(math.Pow(f,2) + math.Pow(p,2))
+		var f float32 = float32(x)
+		var p float32 = f * 3.14
+		result += ((f * f) + (p * p)) / 5.5
 	}
 
 	th_counter++
