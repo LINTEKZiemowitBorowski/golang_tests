@@ -15,6 +15,9 @@
 # export GOROOT:=/usr/lib/go
 # export GOPATH:=/media/devel_disk/projects/Sanbox/goexample
 
+BENCHMARK0_SRCS:=src/github.com/lintek/benchmark0/benchmark0.go
+BENCHMARK0_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark0
+
 BENCHMARK1_SRCS:=src/github.com/lintek/benchmark1/benchmark1.go
 BENCHMARK1_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark1
 
@@ -27,7 +30,10 @@ BENCHMARK3_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark3
 BENCHMARK4_SRCS:=src/github.com/lintek/benchmark4/benchmark4.go
 BENCHMARK4_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark4
 
-all: $(BENCHMARK1_BIN) $(BENCHMARK2_BIN) $(BENCHMARK3_BIN) $(BENCHMARK4_BIN)
+all: $(BENCHMARK0_BIN) $(BENCHMARK1_BIN) $(BENCHMARK2_BIN) $(BENCHMARK3_BIN) $(BENCHMARK4_BIN)
+
+$(BENCHMARK0_BIN): $(BENCHMARK0_SRCS)
+	go install -v github.com/lintek/benchmark0
 
 $(BENCHMARK1_BIN): $(BENCHMARK1_SRCS)
 	go install -v github.com/lintek/benchmark1
