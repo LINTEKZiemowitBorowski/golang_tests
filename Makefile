@@ -12,7 +12,7 @@
 # export GOOS:=linux
 # export GOARCH:=arm
 # export GOARM=7
-# export GOROOT:=/usr/lib/go
+# export GOROOT:=/usr/lib/
 # export GOPATH:=/media/devel_disk/projects/Sanbox/goexample
 
 BENCHMARK0_SRCS:=src/github.com/lintek/benchmark0/benchmark0.go
@@ -33,7 +33,11 @@ BENCHMARK4_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark4
 BENCHMARK5_SRCS:=src/github.com/lintek/benchmark5/benchmark5.go
 BENCHMARK5_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark5
 
-all: $(BENCHMARK0_BIN) $(BENCHMARK1_BIN) $(BENCHMARK2_BIN) $(BENCHMARK3_BIN) $(BENCHMARK4_BIN) $(BENCHMARK5_BIN)
+BENCHMARK6_SRCS:=src/github.com/lintek/benchmark6/benchmark6.go
+BENCHMARK6_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark6
+
+all: $(BENCHMARK0_BIN) $(BENCHMARK1_BIN) $(BENCHMARK2_BIN) $(BENCHMARK3_BIN) \
+$(BENCHMARK4_BIN) $(BENCHMARK5_BIN) $(BENCHMARK6_BIN)
 
 $(BENCHMARK0_BIN): $(BENCHMARK0_SRCS)
 	go install -v github.com/lintek/benchmark0
@@ -52,6 +56,9 @@ $(BENCHMARK4_BIN): $(BENCHMARK4_SRCS)
 
 $(BENCHMARK5_BIN): $(BENCHMARK5_SRCS)
 	go install -v github.com/lintek/benchmark5
+
+$(BENCHMARK6_BIN): $(BENCHMARK6_SRCS)
+	go install -v github.com/lintek/benchmark6
 
 .PHONY: clean
 
