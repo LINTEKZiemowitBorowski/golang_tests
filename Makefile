@@ -30,7 +30,10 @@ BENCHMARK3_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark3
 BENCHMARK4_SRCS:=src/github.com/lintek/benchmark4/benchmark4.go
 BENCHMARK4_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark4
 
-all: $(BENCHMARK0_BIN) $(BENCHMARK1_BIN) $(BENCHMARK2_BIN) $(BENCHMARK3_BIN) $(BENCHMARK4_BIN)
+BENCHMARK5_SRCS:=src/github.com/lintek/benchmark5/benchmark5.go
+BENCHMARK5_BIN:=pkg/$(GOOS)_$(GOARCH)/github.com/lintek/benchmark5
+
+all: $(BENCHMARK0_BIN) $(BENCHMARK1_BIN) $(BENCHMARK2_BIN) $(BENCHMARK3_BIN) $(BENCHMARK4_BIN) $(BENCHMARK5_BIN)
 
 $(BENCHMARK0_BIN): $(BENCHMARK0_SRCS)
 	go install -v github.com/lintek/benchmark0
@@ -46,6 +49,9 @@ $(BENCHMARK3_BIN): $(BENCHMARK3_SRCS)
 
 $(BENCHMARK4_BIN): $(BENCHMARK4_SRCS)
 	go install -v github.com/lintek/benchmark4
+
+$(BENCHMARK5_BIN): $(BENCHMARK5_SRCS)
+	go install -v github.com/lintek/benchmark5
 
 .PHONY: clean
 
