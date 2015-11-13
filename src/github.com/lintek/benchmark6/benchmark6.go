@@ -35,17 +35,19 @@ func main() {
 	fmt.Printf("Unsorted data: %v\n", myList)
 	startTime := time.Now()
 
-
-	for x := 0; x < 10000; x++ {
-		tmpList[x] = make([][]int, len(myList) * 9)
-		copy(tmpList[x], myList)
+	for x := 0; x < len(tmpList); x++ {
+		tmpList[x] = make([][]int, len(myList) )
+		for y := 0; y < len(myList); y++ {
+			tmpList[x][y] = make([]int, len(myList[y]))
+			copy(tmpList[x][y], myList[y])
+		}
 	}
 
 	sortTime := time.Now()
 
-	for x := 0; x < 10000; x++ {
-		for _, element := range tmpList[x] {
-				BubbleSort(element)
+	for _, listCopy := range tmpList {
+		for _, subList := range listCopy {
+				BubbleSort(subList)
 			}
 	}
 
@@ -56,5 +58,5 @@ func main() {
 
 	fmt.Printf("Copying time: %f\n", copyingTime.Seconds())
 	fmt.Printf("Sorting time: %f\n", sortingTime.Seconds())
-	fmt.Printf("Sorted data: %v\n", myList)
+	// fmt.Printf("Sorted data: %v\n", tmpList)
 }
