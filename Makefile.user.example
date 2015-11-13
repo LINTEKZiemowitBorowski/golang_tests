@@ -1,0 +1,13 @@
+###############################################################################
+#
+#     Makefile for golang_tests
+#
+#     Copyright (c) 2015 LINTEK Ziemowit Borowski
+#
+###############################################################################
+
+export GOOS:=linux
+export GOARCH:=arm
+export GOARM:=7
+export CGO_ENABLED:=1
+export CC:=/home/grzybek/Tools/gcc-linaro-4.8-2015.06-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc

@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"time"
-	"fmt"
 	"sync"
 	"runtime"
 )

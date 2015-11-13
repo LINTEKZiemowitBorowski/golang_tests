@@ -1,3 +1,6 @@
+### Project specific files
+/Makefile.user
+
 ### Emacs template
 # -*- mode: gitignore; -*-
 *~
