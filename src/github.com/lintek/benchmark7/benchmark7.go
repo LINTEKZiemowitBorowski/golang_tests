@@ -3,43 +3,40 @@
  import (
 	 "fmt"
 	 "io"
-	 "net/http"
 	 "os"
 	 "runtime"
 	 "time"
+	 "net/http"
  )
 
  func download_file(rawURL string, fileName string) {
-	 fmt.Println("Downloading file...")
+	 fmt.Printf("Downloading file...\n")
 
 	 file, err := os.Create(fileName)
-
 	 if err != nil {
-			 fmt.Println(err)
-			 panic(err)
+		 fmt.Println(err)
+		 panic(err)
 	 }
 	 defer file.Close()
 
 	 check := http.Client{
-			 CheckRedirect: func(r *http.Request, via []*http.Request) error {
-					 r.URL.Opaque = r.URL.Path
-					 return nil
-			 },
+		 CheckRedirect: func(r *http.Request, via []*http.Request) error {
+			 r.URL.Opaque = r.URL.Path
+			 return nil
+		 },
 	 }
 
-	 resp, err := check.Get(rawURL + fileName) // add a filter to check redirect
-
+	 resp, err := check.Get(rawURL + fileName)
 	 if err != nil {
-			 fmt.Println(err)
-			 panic(err)
+		 fmt.Println(err)
+		 panic(err)
 	 }
 	 defer resp.Body.Close()
 	 fmt.Printf("Response: %v\n", resp.Status)
 
 	 size, err := io.Copy(file, resp.Body)
-
 	 if err != nil {
-			 panic(err)
+		 panic(err)
 	 }
 
 	 fmt.Printf("%s with %v bytes downloaded\n", fileName, size)
@@ -53,13 +50,13 @@
 	 fmt.Printf("Number of available CPUs: %d\n", runtime.NumCPU())
 
 	 // Remove already downloaded file
-	if _, err := os.Stat(fileName); err == nil {
-		err := os.Remove(fileName)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	}
+	 if _, err := os.Stat(fileName); err == nil {
+		 err := os.Remove(fileName)
+		 if err != nil {
+			 fmt.Println(err)
+			 return
+		 }
+	 }
 
 	 start_time := time.Now()
 
