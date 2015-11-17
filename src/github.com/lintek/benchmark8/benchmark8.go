@@ -74,9 +74,9 @@
 	 // Remove already downloaded file
 	 removeFile(fileName)
 
-	 startTime := time.Now()
+	 startTime1 := time.Now()
 
-	 // Legacy metod
+	 // Legacy method
 	 downloadFile1(serverName, fileName)
 
 	 legacyDownloadTime := time.Now()
@@ -84,11 +84,13 @@
 	 // Remove already downloaded file
 	 removeFile(fileName)
 
+	 startTime2 := time.Now()
+
 	 // WGET method
 	 downloadFile2(serverName, fileName)
 
 	 wgetDownloadTime := time.Now()
 
-	 fmt.Printf("Download time using legacy method: %f\n", legacyDownloadTime.Sub(startTime).Seconds())
-	 fmt.Printf("Download time using wget method: %f\n", wgetDownloadTime.Sub(legacyDownloadTime).Seconds())
+	 fmt.Printf("Download time using legacy method: %f\n", legacyDownloadTime.Sub(startTime1).Seconds())
+	 fmt.Printf("Download time using wget method: %f\n", wgetDownloadTime.Sub(startTime2).Seconds())
  }
