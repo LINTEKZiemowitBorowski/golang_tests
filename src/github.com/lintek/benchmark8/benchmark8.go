@@ -7,9 +7,10 @@
 	 "runtime"
 	 "time"
 	 "net/http"
+	 "os/exec"
  )
 
- func download_file(rawURL string, fileName string) {
+ func downloadFile1(rawURL string, fileName string) {
 	 fmt.Printf("Downloading file...\n")
 
 	 file, err := os.Create(fileName)
@@ -42,6 +43,27 @@
 	 fmt.Printf("%s with %v bytes downloaded\n", fileName, size)
  }
 
+ func downloadFile2(rawURL string, fileName string) {
+	 fmt.Printf("Downloading file...\n")
+
+	 _, err := exec.Command("wget", rawURL + fileName).Output()
+	 if err != nil {
+		 fmt.Printf("%s\n", err)
+	 }
+
+	 fmt.Printf("File downloaded\n")
+ }
+
+ func removeFile(fileName string) {
+	 if _, err := os.Stat(fileName); err == nil {
+		 err := os.Remove(fileName)
+		 if err != nil {
+			 fmt.Println(err)
+			 return
+		 }
+	 }
+ }
+
  func main() {
 	 serverName := "http://developer.toradex.com/files/toradex-dev/uploads/media/Colibri/Linux/Images/"
 	 fileName := "Apalis_T30_LinuxImageV2.5Beta2_20151106.tar.bz2"
@@ -50,18 +72,23 @@
 	 fmt.Printf("Number of available CPUs: %d\n", runtime.NumCPU())
 
 	 // Remove already downloaded file
-	 if _, err := os.Stat(fileName); err == nil {
-		 err := os.Remove(fileName)
-		 if err != nil {
-			 fmt.Println(err)
-			 return
-		 }
-	 }
+	 removeFile(fileName)
 
-	 start_time := time.Now()
+	 startTime := time.Now()
 
-	 download_file(serverName, fileName)
+	 // Legacy metod
+	 downloadFile1(serverName, fileName)
 
-	 download_time := time.Now().Sub(start_time)
-	 fmt.Printf("Download time: %f\n", download_time.Seconds())
+	 legacyDownloadTime := time.Now()
+
+	 // Remove already downloaded file
+	 removeFile(fileName)
+
+	 // WGET method
+	 downloadFile2(serverName, fileName)
+
+	 wgetDownloadTime := time.Now()
+
+	 fmt.Printf("Download time using legacy method: %f\n", legacyDownloadTime.Sub(startTime).Seconds())
+	 fmt.Printf("Download time using wget method: %f\n", wgetDownloadTime.Sub(legacyDownloadTime).Seconds())
  }
