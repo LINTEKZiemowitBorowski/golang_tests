@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"time"
+	"sort"
 )
 
 var myList = [][]int{
@@ -18,14 +19,8 @@ var myList = [][]int{
 	{54, 26, 93, 17, 77, 31, 44, 55, 20}}
 
 
-func BubbleSort(dataList []int) {
-	for i := 0; i < len(dataList) - 1; i++ {
-		for j := i + 1; j < len(dataList); j++ {
-			if dataList[i] > dataList[j] {
-				dataList[i], dataList[j] = dataList[j], dataList[i]
-			}
-		}
-	}
+func BuiltInSort(dataList []int) {
+	sort.Ints(dataList)
 }
 
 
@@ -47,7 +42,7 @@ func main() {
 
 	for _, listCopy := range tmpList {
 		for _, subList := range listCopy {
-				BubbleSort(subList)
+				BuiltInSort(subList)
 			}
 	}
 
