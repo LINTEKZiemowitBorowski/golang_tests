@@ -14,7 +14,8 @@ export GOPATH ?= $(CURDIR)
 export GOOS ?= linux
 export GOARCH ?= amd64
 
-BENCHMARKS:= benchmark0 benchmark1 benchmark2 benchmark3 benchmark4 benchmark5 benchmark6 benchmark7 benchmark8
+BENCHMARKS:= benchmark0 benchmark1 benchmark2 benchmark3 benchmark4 \
+benchmark5 benchmark6 benchmark7 benchmark7a benchmark8
 
 EXECUTABLES:=$(addprefix $(GOPATH)/bin/$(GOOS)_$(GOARCH)/,$(BENCHMARKS))
 
