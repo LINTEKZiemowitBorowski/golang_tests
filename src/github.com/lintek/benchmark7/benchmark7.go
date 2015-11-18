@@ -1,57 +1,99 @@
-package main
+ package main
 
-import (
-	"fmt"
-	"time"
-	"sort"
-)
+ import (
+	 "fmt"
+	 "io"
+	 "os"
+	 "runtime"
+	 "time"
+	 "net/http"
+	 "os/exec"
+ )
 
-var myList = [][]int{
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20}}
+ const (
+	 SERVER_NAME = "http://developer.toradex.com/files/toradex-dev/uploads/media/Colibri/Linux/Images/"
+	 FILE_NAME = "Apalis_T30_LinuxImageV2.5Beta2_20151106.tar.bz2"
+ )
 
+ func downloadFile1(rawURL string, fileName string) {
+	 fmt.Printf("Downloading file...\n")
 
-func BuiltInSort(dataList []int) {
-	sort.Ints(dataList)
-}
+	 file, err := os.Create(fileName)
+	 if err != nil {
+		 fmt.Println(err)
+		 panic(err)
+	 }
+	 defer file.Close()
 
+	 check := http.Client{
+		 CheckRedirect: func(r *http.Request, via []*http.Request) error {
+			 r.URL.Opaque = r.URL.Path
+			 return nil
+		 },
+	 }
 
-func main() {
-	var tmpList = make([][][]int, 10000)
+	 resp, err := check.Get(rawURL + fileName)
+	 if err != nil {
+		 fmt.Println(err)
+		 panic(err)
+	 }
+	 defer resp.Body.Close()
+	 fmt.Printf("Response: %v\n", resp.Status)
 
-	// fmt.Printf("Unsorted data: %v\n", myList)
-	startTime := time.Now()
+	 size, err := io.Copy(file, resp.Body)
+	 if err != nil {
+		 panic(err)
+	 }
 
-	for x := 0; x < len(tmpList); x++ {
-		tmpList[x] = make([][]int, len(myList) )
-		for y := 0; y < len(myList); y++ {
-			tmpList[x][y] = make([]int, len(myList[y]))
-			copy(tmpList[x][y], myList[y])
-		}
-	}
+	 fmt.Printf("%s with %v bytes downloaded\n", fileName, size)
+ }
 
-	sortTime := time.Now()
+ func downloadFile2(rawURL string, fileName string) {
+	 fmt.Printf("Downloading file...\n")
 
-	for _, listCopy := range tmpList {
-		for _, subList := range listCopy {
-				BuiltInSort(subList)
-			}
-	}
+	 _, err := exec.Command("wget", rawURL + fileName).Output()
+	 if err != nil {
+		 fmt.Printf("%s\n", err)
+	 }
 
-	endTime := time.Now()
+	 fmt.Printf("File downloaded\n")
+ }
 
-	copyingTime := sortTime.Sub(startTime)
-	sortingTime := endTime.Sub(sortTime)
+ func removeFile(fileName string) {
+	 if _, err := os.Stat(fileName); err == nil {
+		 err := os.Remove(fileName)
+		 if err != nil {
+			 fmt.Println(err)
+			 return
+		 }
+	 }
+ }
 
-	fmt.Printf("Copying time: %f\n", copyingTime.Seconds())
-	fmt.Printf("Sorting time: %f\n", sortingTime.Seconds())
-	// fmt.Printf("Sorted data: %v\n", tmpList)
-}
+ func main() {
+
+	 runtime.GOMAXPROCS(runtime.NumCPU())
+	 fmt.Printf("Number of available CPUs: %d\n", runtime.NumCPU())
+
+	 // Remove already downloaded file
+	 removeFile(FILE_NAME)
+
+	 startTime1 := time.Now()
+
+	 // Legacy method
+	 downloadFile1(SERVER_NAME, FILE_NAME)
+
+	 legacyDownloadTime := time.Now()
+
+	 // Remove already downloaded file
+	 removeFile(FILE_NAME)
+
+	 startTime2 := time.Now()
+
+	 // WGET method
+	 downloadFile2(SERVER_NAME, FILE_NAME)
+
+	 wgetDownloadTime := time.Now()
+
+	 fmt.Printf("Download time using legacy method: %f\n", legacyDownloadTime.Sub(startTime1).Seconds())
+	 fmt.Printf("Download time using wget method: %f\n", wgetDownloadTime.Sub(startTime2).Seconds())
+ }

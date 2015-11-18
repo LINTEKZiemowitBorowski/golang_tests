@@ -2,20 +2,17 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"sort"
 	"time"
 )
 
-var myList = [][]int{
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20},
-	{54, 26, 93, 17, 77, 31, 44, 55, 20}}
+const (
+	SEQUENCE_LEN = 20000
+	ITERATIONS = 10
+	MAX_VALUE = 10000
+	GENERATOR_SEED = 1000
+)
 
 
 func BubbleSort(dataList []int) {
@@ -29,34 +26,60 @@ func BubbleSort(dataList []int) {
 }
 
 
-func main() {
-	var tmpList = make([][][]int, 10000)
+func BuiltInSort(dataList []int) {
+	sort.Ints(dataList)
+}
 
-	// fmt.Printf("Unsorted data: %v\n", myList)
-	startTime := time.Now()
 
-	for x := 0; x < len(tmpList); x++ {
-		tmpList[x] = make([][]int, len(myList) )
-		for y := 0; y < len(myList); y++ {
-			tmpList[x][y] = make([]int, len(myList[y]))
-			copy(tmpList[x][y], myList[y])
-		}
+func FillList() []int {
+	generator := rand.New(rand.NewSource(GENERATOR_SEED))
+	subList := make([]int, SEQUENCE_LEN)
+	for y := 0; y < len(subList); y++ {
+		subList[y] = generator.Intn(MAX_VALUE)
 	}
 
-	sortTime := time.Now()
+	return subList
+}
 
-	for _, listCopy := range tmpList {
-		for _, subList := range listCopy {
+
+func main() {
+	var srcList = make([][]int, ITERATIONS)
+	var tmpList = make([][]int, ITERATIONS)
+
+	// Create test data
+	for x := 0; x < len(srcList); x++ {
+		srcList[x] = FillList()
+	}
+
+	for i := 0; i < 2; i++ {
+
+		// fmt.Printf("Unsorted data: %v\n", srcList)
+		startTime := time.Now()
+
+		for x := 0; x < len(tmpList); x++ {
+			tmpList[x] = make([]int, SEQUENCE_LEN)
+			copy(tmpList[x], srcList[x])
+		}
+
+		sortTime := time.Now()
+
+		if i == 0 {
+			for _, subList := range tmpList {
+				BuiltInSort(subList)
+			}
+		} else {
+			for _, subList := range tmpList {
 				BubbleSort(subList)
 			}
+		}
+
+		endTime := time.Now()
+
+		copyingTime := sortTime.Sub(startTime)
+		sortingTime := endTime.Sub(sortTime)
+
+		fmt.Printf("Copying time: %f\n", copyingTime.Seconds())
+		fmt.Printf("Sorting time: %f\n", sortingTime.Seconds())
+		// fmt.Printf("Sorted data: %v\n", tmpList)
 	}
-
-	endTime := time.Now()
-
-	copyingTime := sortTime.Sub(startTime)
-	sortingTime := endTime.Sub(sortTime)
-
-	fmt.Printf("Copying time: %f\n", copyingTime.Seconds())
-	fmt.Printf("Sorting time: %f\n", sortingTime.Seconds())
-	// fmt.Printf("Sorted data: %v\n", tmpList)
 }
