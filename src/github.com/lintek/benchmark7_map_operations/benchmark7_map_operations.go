@@ -35,15 +35,11 @@ func buildMap(myKeys []int64) map[int64]string {
 }
 
 
-func searchMap(myKeys []int64, myMap map[int64]string) []int64 {
-	myValues := make([]int64, 0)
+func searchMap(myKeys []int64, myMap map[int64]string) []string {
+	myValues := make([]string, 0)
 
 	for _, key := range(myKeys) {
-		if value, ok := myMap[key]; ok {
-			var y int64
-			fmt.Sscanf(value, "%d", &y)
-			myValues = append(myValues, y)
-		}
+		myValues = append(myValues, myMap[key])
 	}
 
 	return myValues
