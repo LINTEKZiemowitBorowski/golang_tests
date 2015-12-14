@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 	"runtime"
 	"github.com/howeyc/crc16"
@@ -27,6 +28,8 @@ func prepareData() [][]uint8 {
 }
 
 func main() {
+	fmt.Printf("Running: %s\n", os.Args[0])
+
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	fmt.Printf("Number of available CPUs: %d\n", runtime.NumCPU())
 

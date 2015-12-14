@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 	"math/rand"
 )
@@ -47,6 +48,7 @@ func searchMap(myKeys []int64, myMap map[int64]string) []string {
 
 
 func main() {
+	fmt.Printf("Running: %s\n", os.Args[0])
 
 	createdKeys := GetRandoms()
 

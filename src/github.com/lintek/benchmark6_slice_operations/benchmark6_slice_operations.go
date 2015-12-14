@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"math/rand"
 	"sort"
 	"time"
@@ -43,6 +44,8 @@ func FillList() []int {
 
 
 func main() {
+	fmt.Printf("Running: %s\n", os.Args[0])
+
 	var srcList = make([][]int, ITERATIONS)
 	var tmpList = make([][]int, ITERATIONS)
 

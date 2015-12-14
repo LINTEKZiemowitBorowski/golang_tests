@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"math"
 	"time"
 	"sync"
@@ -28,6 +29,7 @@ func run() float64 {
 }
 
 func main() {
+	fmt.Printf("Running: %s\n", os.Args[0])
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	fmt.Printf("Number of available CPUs: %d\n", runtime.NumCPU())
