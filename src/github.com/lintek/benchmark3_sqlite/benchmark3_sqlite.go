@@ -10,30 +10,26 @@ import (
 	"log"
 )
 
-func initDatabase(databaseName string) {
+func initDatabase(databaseName string) *sql.DB {
 	db, err := sql.Open("sqlite3", "./my_database")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
 	sqlStmt := `CREATE TABLE IF NOT EXISTS MY_DATABASE (PNAME TEXT PRIMARY KEY, PVALUE TEXT); DELETE FROM MY_DATABASE`
 	_, err = db.Exec(sqlStmt)
 
 	if err != nil {
 		log.Printf("%q: %s\n", err, sqlStmt)
-		return
+		db.Close()
+		return nil
 	}
+
+	return db
 }
 
-func selectFromDatabase(databaseName string) map[string]string {
+func selectFromDatabase(databaseName string, db *sql.DB) map[string]string {
 	result := make(map[string]string)
-
-	db, err := sql.Open("sqlite3", "./my_database")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
 
 	rows, err := db.Query(`SELECT PNAME, PVALUE FROM MY_DATABASE`)
 	if err != nil {
@@ -53,13 +49,7 @@ func selectFromDatabase(databaseName string) map[string]string {
 	return result
 }
 
-func insertIntoDatabase(databaseName string, values map[string]map[string]string) {
-	db, err := sql.Open("sqlite3", "./my_database")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
+func insertIntoDatabase(databaseName string, db *sql.DB, values map[string]map[string]string) {
 	tx, err := db.Begin()
 	if err != nil {
 		log.Fatal(err)
@@ -82,6 +72,11 @@ func insertIntoDatabase(databaseName string, values map[string]map[string]string
 
 	tx.Commit()
 }
+
+func closeDatabase(db *sql.DB) {
+	db.Close()
+}
+
 
 func main() {
 
@@ -114,19 +109,21 @@ func main() {
 	}
 
 	// Initialize database
-	initDatabase("my_database")
+	myDB := initDatabase("my_database")
 
 	start_time := time.Now()
 
 	// Insert data into database
-	insertIntoDatabase("my_database", myData)
+	insertIntoDatabase("my_database", myDB, myData)
 
 	// Read data from the database
-	retrievedData := selectFromDatabase("my_database")
+	retrievedData := selectFromDatabase("my_database", myDB)
 
 	execution_time := time.Now().Sub(start_time)
 	fmt.Printf("Execution time: %f\n", execution_time.Seconds())
 
 	fmt.Printf("Num retrieved items: %d\n", len(retrievedData))
     //fmt.Printf("Retrieved data: %v\n", retrievedData)
+
+	closeDatabase(myDB)
 }
