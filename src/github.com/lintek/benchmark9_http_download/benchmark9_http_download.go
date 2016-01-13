@@ -12,7 +12,7 @@
 
  const (
 	 SERVER_NAME = "http://developer.toradex.com/files/toradex-dev/uploads/media/Colibri/Linux/Images/"
-	 FILE_NAME = "Apalis_T30_LinuxImageV2.5Beta2_20151106.tar.bz2"
+	 FILE_NAME = "Apalis_T30_LinuxImageV2.5Beta3_20151215.tar.bz2"
  )
 
  func downloadFile1(rawURL string, fileName string) {
