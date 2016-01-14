@@ -14,9 +14,9 @@ export GOPATH ?= $(CURDIR)
 export GOOS ?= linux
 export GOARCH ?= amd64
 
-BENCHMARKS:= benchmark0_float_arithmetic benchmark1_float_arithmetic benchmark2_int_arithmetic benchmark3_sqlite \
- benchmark4_sqlite benchmark5_fibonacci benchmark6_slice_operations benchmark7_map_operations benchmark8_crc \
- benchmark9_http_download
+BENCHMARKS:= benchmark00_float_arithmetic benchmark01_float_arithmetic benchmark02_int_arithmetic  \
+ benchmark03_string_operations benchmark04_slice_operations benchmark05_map_operations \
+ benchmark06_fibonacci benchmark07_crc benchmark08_sqlite benchmark09_sqlite benchmark10_http_download
 
 EXECUTABLES:=$(addprefix $(GOPATH)/bin/$(GOOS)_$(GOARCH)/,$(BENCHMARKS))
 
