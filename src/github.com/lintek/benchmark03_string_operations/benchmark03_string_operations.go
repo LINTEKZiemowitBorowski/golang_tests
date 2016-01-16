@@ -5,15 +5,13 @@ import (
 	"os"
 	"time"
 	"runtime"
-	"sync"
 	"strings"
 	"bytes"
 )
 
-var wg sync.WaitGroup
 
 const (
-	NUM_ITERATIONS = 100000
+	NUM_ITERATIONS = 200000
 	NUM_TASKS = 50
 )
 
@@ -21,61 +19,70 @@ const (
 func prepareData() [] string {
 	data := make([]string, 0)
 
-    for c := 0x30; c < 0x79; c+=3 {
-		item := fmt.Sprintf("%c%c%c", c, c+1 , c+2)
+    for c := 0x30; c < 0x79; c+=2 {
+		item := fmt.Sprintf("%c%c%c", c, c+1, c+2)
 		data = append(data, item)
 	}
 
 	return data
 }
 
-func function1(inputData []string) {
+func function1(inputData []string, c chan string) {
 	result := ""
-	defer wg.Done()
 
 	for i:= 0; i < len(inputData); i++ {
 		result += inputData[i]
 	}
+
+    c <- result
+	close(c)
 }
 
-func function2(inputData []string) {
-	defer wg.Done()
-	strings.Join(inputData, "")
+func function2(inputData []string, c chan string) {
+	c <- strings.Join(inputData, "")
+	close(c)
 }
 
-func function3(inputData []string) {
+func function3(inputData []string, c chan string) {
 	var result bytes.Buffer
-	defer wg.Done()
 
 	for i:= 0; i < len(inputData); i++ {
 		result.WriteString(inputData[i])
 	}
 
-	result.String()
+	c <- result.String()
+	close(c)
 }
 
 func main() {
-	funcs := []func([]string) {function1, function2, function3}
 	fmt.Printf("Running: %s\n", os.Args[0])
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	fmt.Printf("Number of available CPUs: %d\n", runtime.NumCPU())
 
 	myData := prepareData()
-	fmt.Printf("myData: %v\n", myData)
+	/*fmt.Printf("myData: %v\n", myData)*/
 
-	for f := 0; f < 3; f++ {
-		wg.Add(50)
-		startTime := time.Now()
+	funcs := []func([]string, chan string) {function1, function2, function3}
+	for f := range funcs {
 
-		for i := 0; i < NUM_TASKS; i++ {
-			go funcs[f](myData)
+		var chans [NUM_TASKS] chan string
+		for i := range chans {
+		   chans[i] = make(chan string)
 		}
 
-		wg.Wait()
+		startTime := time.Now()
+
+		for i := range chans {
+			go funcs[f](myData, chans[i])
+		}
+
 		stopTime := time.Now()
 
 		fmt.Printf("Execution time for function%d: %f\n", f+1, stopTime.Sub(startTime).Seconds())
-	}
 
+		/*for i := range chans {
+		   fmt.Printf("Generated output for task %d: %s\n", i, <-chans[i])
+		}*/
+	}
 }
