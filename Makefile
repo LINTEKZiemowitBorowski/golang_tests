@@ -2,7 +2,7 @@
 #
 #     Makefile for golang_tests
 #
-#     Copyright (c) 2015 LINTEK Ziemowit Borowski
+#     Copyright (c) 2016 LINTEK Ziemowit Borowski
 #
 ###############################################################################
 
@@ -16,7 +16,8 @@ export GOARCH ?= amd64
 
 BENCHMARKS:= benchmark00_float_arithmetic benchmark01_float_arithmetic benchmark02_int_arithmetic  \
  benchmark03_string_operations benchmark04_slice_operations benchmark05_map_operations \
- benchmark06_fibonacci benchmark07_crc benchmark08_sqlite benchmark09_sqlite benchmark10_http_download
+ benchmark06_fibonacci benchmark07_crc benchmark08_sqlite benchmark09_sqlite benchmark10_mongodb \
+ benchmark11_mongodb benchmark12_http_download
 
 EXECUTABLES:=$(addprefix $(GOPATH)/bin/$(GOOS)_$(GOARCH)/,$(BENCHMARKS))
 
