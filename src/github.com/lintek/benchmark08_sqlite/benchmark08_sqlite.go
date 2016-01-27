@@ -10,6 +10,11 @@ import (
 	"log"
 )
 
+const (
+	NUM_ITER = 500
+	NUM_RECORDS = 20
+)
+
 func initDatabase(databaseName string) *sql.DB {
 	db, err := sql.Open("sqlite3", "./my_database")
 	if err != nil {
@@ -85,13 +90,11 @@ func main() {
 	fmt.Printf("Number of available CPUs: %d\n", runtime.NumCPU())
 
 	// Prepare test data
-	num_iter := 500
-    num_records := 20
 	myData := make(map[string]map[string]string)
 
-	for i := 0; i < num_iter; i++ {
+	for i := 0; i < NUM_ITER; i++ {
 		mValue := make(map[string]string)
-		for j := 0; j < num_records; j++ {
+		for j := 0; j < NUM_RECORDS; j++ {
 			mValue[ fmt.Sprintf(" %04d %04d", i, j)] = fmt.Sprintf(" Record value %04d %04d\n", i, j)
 		}
 
@@ -124,7 +127,7 @@ func main() {
 	fmt.Printf("Execution time: %f\n", execution_time.Seconds())
 
 	fmt.Printf("Num retrieved items: %d\n", len(retrievedData))
-    //fmt.Printf("Retrieved data: %v\n", retrievedData)
+	//fmt.Printf("Retrieved data: %v\n", retrievedData)
 
 	closeDatabase(myDB)
 }
