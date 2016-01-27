@@ -5,20 +5,20 @@ import (
 	"os"
 	"time"
 	"runtime"
-	"github.com/howeyc/crc16"
+	"github.com/jiguorui/crc16"
 )
 
 const (
 	ARRAY_LEN = 255
-	NUM_DATA = 10000
+	NUM_ITEMS = 10000
 )
 
 func prepareData() [][]uint8 {
-	data := make([][]uint8, ARRAY_LEN)
+	data := make([][]uint8, NUM_ITEMS)
 
-	for i := 0; i < len(data); i++ {
-		subItem := make([]uint8, NUM_DATA)
-		for v := 0; v < len(subItem); v++ {
+	for i := range(data) {
+		subItem := make([]uint8, ARRAY_LEN)
+		for v := range(subItem) {
 			subItem[v] = uint8((v + i) % 255)
 		}
 		data[i] = subItem
@@ -36,13 +36,11 @@ func main() {
 	myData := prepareData()
 	// fmt.Printf("myData: %v\n", myData)
 
-	myTable := crc16.MakeTable(0xA001)
-
 	startTime := time.Now()
 
-	checkSums := make([]string, ARRAY_LEN)
-	for i:=0; i < len(myData); i++ {
-		checkSums[i] = fmt.Sprintf("%04X", crc16.Checksum(myData[i], myTable))
+	checkSums := make([]string, NUM_ITEMS)
+	for i := range(myData){
+		checkSums[i] = fmt.Sprintf("%X", crc16.CheckSum(myData[i]))
 	}
 
 	stopTime := time.Now()
