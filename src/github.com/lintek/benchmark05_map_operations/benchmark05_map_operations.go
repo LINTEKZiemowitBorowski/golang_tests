@@ -17,7 +17,7 @@ const (
 func GetRandoms() []int64 {
 	generator := rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
 	randoms := make([]int64, SEQUENCE_LEN)
-	for y := 0; y < len(randoms); y++ {
+	for y := range(randoms) {
 		randoms[y] = generator.Int63n(MAX_VALUE)
 	}
 
