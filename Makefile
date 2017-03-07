@@ -31,4 +31,9 @@ $(GOPATH)/bin/$(GOOS)_$(GOARCH)/%: $(GOPATH)/src/github.com/lintek/%/*
 .PHONY: clean
 
 clean:
+	rm -rf bin
+
+.PHONY: cleanall
+
+cleanall:
 	rm -rf bin pkg
